@@ -160,6 +160,9 @@ class UI {
     print('Informe o endereço completo:');
     String endereco = stdin.readLineSync()!;
 
+    print('Informe o salário do professor:');
+    double salario = double.parse(stdin.readLineSync()!);
+
     Professor professor = Professor();
     professor.nome = nome;
     professor.email = email;
