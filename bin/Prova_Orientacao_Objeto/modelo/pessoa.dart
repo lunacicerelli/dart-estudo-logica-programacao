@@ -5,9 +5,9 @@ class Pessoa {
   late String email;
   late String nome;
   late DateTime nascimento;
-  late String endereco;
+  String? endereco;
 
-  Pessoa() {
+  Pessoa(this.email, this.nome, this.nascimento, this.endereco) {
     codigo = GeradorCodigo.gerarProximoCodigoPessoa();
   }
 

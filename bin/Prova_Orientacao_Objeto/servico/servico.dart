@@ -6,9 +6,16 @@ import '../modelo/professor.dart';
 import '../repositorio/curso_repositorio.dart';
 import '../repositorio/pessoa_repositorio.dart';
 
+//Regras do negócio. Requisitos.
+
 class Servico {
   PessoaRepositorio pessoaRepositorio = PessoaRepositorio();
   CursoRepositorio cursoRepositorio = CursoRepositorio();
+
+  Pessoa? buscarPessoa(String email) {
+    Pessoa? pessoaEncontrada = pessoaRepositorio.buscarPorEmail(email);
+    return pessoaEncontrada;
+  }
 
   bool cadastrarPessoa(Pessoa pessoa) {
     Pessoa? pessoaEncontrada = pessoaRepositorio.buscarPorEmail(pessoa.email);
@@ -19,13 +26,14 @@ class Servico {
     return false;
   }
 
+  //método exclui uma pessoa e retorna o bool se a pessoa foi excluida
   bool excluirPessoa(Pessoa pessoa) {
-    if(pessoa is Aluno){
+    if (pessoa is Aluno) {
       Aluno aluno = pessoa;
       aluno.notas = []; //removendo as notas do aluno antes de excluir ele
     }
     bool pessoaFoiExcluida = pessoaRepositorio.excluir(pessoa);
-    return pessoaFoiExcluida; 
+    return pessoaFoiExcluida;
   }
 
   List<Pessoa> listarPessoas() {
@@ -45,6 +53,8 @@ class Servico {
     return listaDeAlunos;
   }
 
+  //listar professores percorrendo a lista e considerando e a pessoa que foi informada é prfessor. caso seja
+  //caso seja, será adicionado e retornada na lista de professores
   List<Professor> listarProfessores() {
     List<Professor> listaDeProfessores = [];
     List<Pessoa> listaDePessoas = pessoaRepositorio.listar();
@@ -85,9 +95,12 @@ class Servico {
     }
 
     if (totalAlunos < curso.totalAlunos) {
+      NotaAluno notaAluno = NotaAluno();
+      notaAluno.curso = curso;
+      aluno.notas.add(notaAluno);
       curso.addPessoa(aluno);
     }
-  } 
+  }
 
   addProfessorNoCurso(Professor professor, Curso curso) {
     return curso.addPessoa(professor);
@@ -130,8 +143,10 @@ class Servico {
   double retornaMedia(aluno, curso) {
     NotaAluno? notaAlunoTemp;
     for (NotaAluno notaAluno in aluno.notas) {
+      //Passar por todos os cursos (notas) do aluno
+
       if (notaAluno.curso.codigo == curso.codigo) {
-        notaAlunoTemp = notaAluno;
+        notaAlunoTemp = notaAluno; //achou o curso correto
       }
     }
 
@@ -165,6 +180,7 @@ class Servico {
       }
     }
     if (notaAlunoTemp == null) {
+      //o aluno não está matriculado no curso. códgio errado
       notaAlunoTemp = NotaAluno();
       notaAlunoTemp.curso = curso;
       notaAlunoTemp.notas.add(nota);

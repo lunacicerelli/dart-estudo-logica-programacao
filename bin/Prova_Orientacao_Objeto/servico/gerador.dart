@@ -10,3 +10,5 @@ class GeradorCodigo {
     return codigoPessoa++;
   }
 }
+
+

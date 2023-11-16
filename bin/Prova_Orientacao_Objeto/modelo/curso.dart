@@ -9,10 +9,10 @@ class Curso{
   late int totalAlunos;
   late List<Pessoa> _pessoas;
 
-  
 
-  Curso(){
+  Curso(this.nome, this.totalAlunos){
     codigo = GeradorCodigo.gerarProximoCodigoCurso();
+    _pessoas = [];
   }
 
   

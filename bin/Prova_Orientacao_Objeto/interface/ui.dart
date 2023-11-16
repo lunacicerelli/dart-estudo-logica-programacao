@@ -13,6 +13,7 @@ class UI {
   menuPrincipal() {
     String opc = '';
     while (opc != '10') {
+      print('Menu principal');
       print(
           'Informe a opção:\n1. Gerenciar Alunos\n2. Gerenciar Professor\n3. Gerenciar Curso\n4. Gerenciar Nota\n10. Sair');
       opc = stdin.readLineSync()!;
@@ -29,9 +30,9 @@ class UI {
         case '4':
           menuGerenciarNota();
           break;
-        
+
         default:
-        print('opção inválida');
+          print('opção inválida');
           break;
       }
     }
@@ -40,7 +41,7 @@ class UI {
   menuGerenciarAluno() {
     String opc = '';
     while (opc != '10') {
-      print('Informe a opção:');
+      print('Menu Gerenciar Aluno. Informe a opção:');
       print('1. Cadastrar aluno');
       print('2. Editar aluno');
       print('3. Excluir aluno');
@@ -59,6 +60,9 @@ class UI {
           break;
         case '4':
           menuListarAluno();
+          break;
+        default:
+          print('opção inválida');
           break;
       }
     }
@@ -79,11 +83,7 @@ class UI {
     print('Informe o endereço completo:');
     String endereco = stdin.readLineSync()!;
 
-    Aluno aluno = Aluno();
-    aluno.nome = nome;
-    aluno.email = email;
-    aluno.nascimento = nascimento;
-    aluno.endereco = endereco;
+    Aluno aluno = Aluno(nome, email, nascimento, endereco);
 
     bool resultado = servico.cadastrarPessoa(aluno);
     if (resultado) {
@@ -93,20 +93,25 @@ class UI {
     }
   }
 
-  menuAlterarAluno() {}
+  menuAlterarAluno() {
+    print('Implementação pendente');
+  }
 
   menuExcluirAluno() {
     print('Digite o e-mail do aluno a ser excluído:');
     String email = stdin.readLineSync()!;
 
-    Pessoa pessoa = Pessoa();
-    pessoa.email = email;
-
-    bool alunoFoiExcluido = servico.excluirPessoa(pessoa);
-    if (alunoFoiExcluido) {
-      print('Aluno excluída com sucesso');
+    Pessoa? pessoa = servico.buscarPessoa(email);
+    if (pessoa != null) {
+      //aqui vai excluir a pessoa
+      bool alunoFoiExcluido = servico.excluirPessoa(pessoa);
+      if (alunoFoiExcluido) {
+        print('Aluno excluída com sucesso');
+      } else {
+        print('Falha ao excluir!');
+      }
     } else {
-      print('Falha ao excluir!');
+      print('Falha ao excluir, o e-mail não existe!');
     }
   }
 
@@ -121,7 +126,7 @@ class UI {
   menuGerenciarProfessor() {
     String opc = '';
     while (opc != '10') {
-      print('Informe a opção:');
+      print('Menu Gerenciar Professor. Informe a opção:');
       print('1. Cadastrar professor');
       print('2. Editar professor');
       print('3. Excluir professor');
@@ -140,6 +145,9 @@ class UI {
           break;
         case '4':
           menuListarProfessor();
+          break;
+        default:
+          print('opção inválida');
           break;
       }
     }
@@ -160,11 +168,10 @@ class UI {
     print('Informe o endereço completo:');
     String endereco = stdin.readLineSync()!;
 
-    Professor professor = Professor();
-    professor.nome = nome;
-    professor.email = email;
-    professor.nascimento = nascimento;
-    professor.endereco = endereco;
+    print('Informe o salário do professor:');
+    double salario = double.parse(stdin.readLineSync()!);
+
+    Professor professor = Professor(nome, email, nascimento, endereco, salario);
 
     bool resultado = servico.cadastrarPessoa(professor);
     if (resultado) {
@@ -180,14 +187,16 @@ class UI {
     print('Digite o e-mail do professor a ser excluído:');
     String email = stdin.readLineSync()!;
 
-    Pessoa pessoa = Pessoa();
-    pessoa.email = email;
-
-    bool professorFoiExcluido = servico.excluirPessoa(pessoa);
-    if (professorFoiExcluido) {
-      print('Professor excluído com sucesso');
+    Pessoa? pessoa = servico.buscarPessoa(email);
+    if (pessoa != null) {
+      bool professorFoiExcluido = servico.excluirPessoa(pessoa);
+      if (professorFoiExcluido) {
+        print('Professor excluído com sucesso');
+      } else {
+        print('Falha ao excluir!');
+      }
     } else {
-      print('Falha ao excluir!');
+      print('Não existe professor com esse e-mail');
     }
   }
 
@@ -202,7 +211,7 @@ class UI {
   menuGerenciarCurso() {
     String opc = '';
     while (opc != '10') {
-      print('Informe a opção:');
+      print('Menu Gerenciar Curso. Informe a opção:');
       print('1. Cadastrar curso');
       print('2. Editar curso');
       print('3. Excluir curso');
@@ -222,6 +231,9 @@ class UI {
         case '4':
           menuListarCurso();
           break;
+        default:
+          print('opção inválida');
+          break;
       }
     }
   }
@@ -233,9 +245,7 @@ class UI {
     print('Informe a quantidade total de alunos:');
     int totalAlunos = int.parse(stdin.readLineSync()!);
 
-    Curso curso = Curso();
-    curso.nome = nome;
-    curso.totalAlunos = totalAlunos;
+    Curso curso = Curso(nome, totalAlunos);
 
     servico.adicionarCurso(curso);
   }
@@ -244,7 +254,7 @@ class UI {
     //1 add aluno, 2 add professor, 3 remover pessoa
     String opc = '';
     while (opc != '10') {
-      print('Informe a opção:');
+      print('Menu Alterar Curso. Informe a opção:');
       print('1. Adicionar Aluno no curso');
       print('2. Adicionar Professor no curso');
       print('3. Excluir pessoa do curso');
@@ -259,6 +269,9 @@ class UI {
           break;
         case '3':
           menuRemoverPessoaDoCurso();
+          break;
+        default:
+          print('opção inválida');
           break;
       }
     }
@@ -348,7 +361,7 @@ class UI {
   menuGerenciarNota() {
     String opc = '';
     while (opc != '10') {
-      print('Informe a opção:');
+      print('Menu Gerenciar Nota. Informe a opção:');
       print('1. Adicionar nota para o Aluno x no Curso y:');
       print('2. Editar nota');
       print('3. Excluir nota para o Aluno x no Curso y:');
@@ -367,6 +380,9 @@ class UI {
           break;
         case '4':
           menuExibirMedia();
+          break;
+        default:
+          print('opção inválida');
           break;
       }
     }
